@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css"  rel="stylesheet" type="text/css"/>
+<link  href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type=text/css rel=stylesheet>
+<script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+<script src="$!webPath/resources/js/jquery.validate.min.js"></script>
+<script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+<script src="$!webPath/resources/js/jquery.poshytip.min.js"></script>
+<script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+<script src="$!webPath/resources/js/jquery.zh.cn.js"></script>
+<script>
+jQuery(document).ready(function(){
+  jQuery('#beginTime').datepicker({
+	  dateFormat:"yy-mm-dd",
+	  changeMonth: true,
+	  changeYear: true
+  });
+  jQuery('#endTime').datepicker({
+	  dateFormat:"yy-mm-dd",
+	  changeMonth: true,
+	  changeYear: true
+  });
+  //
+});
+function changeArea(obj,level){
+    var id = obj.value;
+    if(id!=""){
+        jQuery.post("$!webPath/load_area.htm",{"pid":id},function(data){
+            jQuery("#area"+level).empty();
+            jQuery("#area"+level).append("<option value=''>请选择</option>");
+            jQuery.each(data, function(index,item){
+                jQuery("#area"+level).append("<option value='"+item.id+"'>"+item.areaName+"</option>");
+                jQuery("#area"+level).show();
+            });
+        },"json");
+    }else{
+        for(var i=level;i<=6;i++){
+            jQuery("#area"+i).empty();
+            jQuery("#area"+i).hide();
+        }
+    }
+};
+</script>
+</head>
+<body>
+
+<div class="cont">
+  <h1 class="seth1">订单管理</h1>
+  <div class="settab"><span class="tab-one"></span> <span class="tabs"> <a href="javascript:void(0);" class="this">所有订单</a></span> <span class="tab-two"></span></div>
+  <form action="$!webPath/admin/distribution_manage_list.htm" method="post" id="queryForm" >
+  <div class="orders">
+    <ul>
+      <li>
+      </span><span>类型</span><span>
+        <select name="type" id="type">
+          <option value="store">店铺名称</option>
+          <option value="buyer">买家名称</option>
+          <option value="order">订单号</option>
+        </select>
+           <input name="type_data" type="text" id="type_data" />
+        </span> <span class="order_input size1">
+      </span> <span>支付方式</span><span>
+        <select name="payment" id="payment">
+          <option value="">所有支付方式</option>
+          <option value="alipay">支付宝</option>
+          <option value="chinabank">网银在线</option>
+          <option value="bill">快钱</option>
+          <option value="tenpay">财付通</option>
+          <option value="outline">线下支付</option>
+          <option value="balance">预付款支付</option>
+        </select>
+        </span>
+      <span>选择区域</span>
+          <select class = "areaId" name="orderfrom.addr.id" id="area1" level="2" onchange="changeArea(this,2)">
+              <option value="" >区域</option>
+              #foreach($area in $areas)
+              <option value="$!area.id">$!area.areaName</option>
+              #end
+          </select>
+          <select class = "areaId" name="area2" id="area2" style="display:none;width:100px;" level="3" onchange="changeArea(this,3)">
+          </select>
+          <select class = "areaId" name="area3" id="area3" style="display:none;width:100px;" level="4" onchange="changeArea(this,4)">
+          </select>
+          <select class = "areaId" name="area4" id="area4" style="display:none;width:100px;" level="5" onchange="changeArea(this,5)">
+          </select>
+          <select class = "areaId" name="addr_id" id="area5" style="display:none;width:100px;" level="6">
+          </select>
+      </li>
+      <li> <span>下单时间</span><span class="order_input size2">
+        <input name="beginTime" type="text" id="beginTime"  readonly="readonly"/>
+        </span><span>—</span><span class="order_input size2">
+        <input name="endTime" type="text" id="endTime" readonly="readonly" />
+        </span> <span>订单金额</span><span class="order_input size2">
+        <input name="begin_price" type="text" id="begin_price" />
+        </span><span>—</span><span class="order_input size2">
+        <input name="end_price" type="text" id="end_price" />
+        </span> <span class="btn_search">
+        <input name="" type="submit"  value="搜索" style="cursor:pointer;"/>
+      </span> </li>
+    </ul>
+  </div>
+  </form>
+  <form action="$!webPath/admin/order_list.htm" method="post" id="ListForm" >
+    <div class="allshop_table">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr style="background: #if($!config.websiteCss=='blue') #2A7AD2 #end 
+      #if($!config.websiteCss=='black')#333 #end; height:30px; color:#FFF">
+         <td width="5%"></td>
+        <td width="10%">店铺名称</td>
+        <td width="15%">订单号</td>
+        <td width="10%">买家名称</td>
+        <td  width="15%">下单时间</td>
+        <td  width="8%">订单总额</td>
+        <td width="10%">支付方式</td>
+        <td width="8%">订单状态</td>
+          <td width="10%">区域</td>
+        <td align="center">操作</td>
+      </tr>
+      #foreach($obj in $objs)
+      <tr>
+          <td  align="left"><input name="id" type="checkbox" id="id" style="width:16px; border:none;" value="$!obj.id" /></td>
+        <td>$!obj.store.store_name</td>
+        <td>$!obj.order_id</td>
+        <td>$!obj.user.userName</td>
+        <td>$!CommUtil.formatLongDate($!obj.addTime)</td>
+        <td>$!obj.totalPrice</td>
+            #set($payment="未支付")
+            #if($!obj.payment.mark=="alipay")
+            #set($payment="支付宝")
+            #end
+            #if($!obj.payment.mark=="alipay_wap")
+            #set($payment="手机网页支付宝")
+            #end
+            #if($!obj.payment.mark=="bill")
+            #set($payment="快钱")
+            #end                 
+            #if($!obj.payment.mark=="chinabank")
+            #set($payment="网银在线")
+            #end       
+            #if($!obj.payment.mark=="outline")
+            #set($payment="线下支付")
+            #end                  
+            #if($!obj.payment.mark=="balance")
+            #set($payment="预存款支付")
+            #end 
+            #if($!obj.payment.mark=="payafter")
+            #set($payment="货到付款")
+            #end
+            #if($!obj.payment.mark=="paypal")
+            #set($payment="paypal")
+            #end        
+        <td>$!payment</td>
+            #if($!obj.order_status==0)
+            #set($status="已取消")
+            #end
+            #if($!obj.order_status==10)
+            #set($status="待付款")
+            #end
+            #if($!obj.order_status==15)
+            #set($status="线下支付待审核")
+            #end
+            #if($!obj.order_status==16)
+            #set($status="货到付款待发货")
+            #end
+            #if($!obj.order_status==20)
+            #set($status="已付款")
+            #end
+            #if($!obj.order_status==30)
+            #set($status="已发货")        
+            #end                
+            #if($!obj.order_status==40)
+            #set($status="已收货")
+            #end
+            #if($!obj.order_status==50)
+            #set($status="已完成,已评价")                                              
+            #end
+            #if($!obj.order_status==60)
+            #set($status="已结束")                                              
+            #end   
+        <td>$!status</td>
+         <td>$!obj.user.area.areaName</td>
+        <td align="center" class="blue xiahua"><a href="$!webPath/admin/order_view.htm?id=$!obj.id">查看</a></td>
+      </tr>
+     #end
+        <tr>
+            <td align="left"><input type="checkbox" name="all" id="all" value="" onclick="selectAll(this)"/>
+                <input name="mulitId" type="hidden" id="mulitId" /></td>
+            <td colspan="2" class="bdel">
+                <span class="sp1">全部</span><span class="sp2">
+          <div class="shop_btn_del shopbtn">
+              <input name="" type="button" value="配送" onclick="cmd('$!webPath/admin/distribution_add.htm');" style="cursor:pointer;" />
+          </div>
+          </span></td>
+        </tr>
+    </table>
+  </div>
+  <div class="fenye">
+    <input name="end_price" type="hidden" id="end_price" value="$!end_price" />
+    <input name="begin_price" type="hidden" id="begin_price" value="$!begin_price" />
+    <input name="endTime" type="hidden" id="endTime" value="$!endTime" />
+    <input name="beginTime" type="hidden" id="beginTime" value="$!beginTime" />
+    <input name="type_data" type="hidden" id="type_data" value="$!type_data" />
+    <input name="type" type="hidden" id="type" value="$!type" />
+    <input name="order_status" type="hidden" id="order_status" value="$!order_status" />
+    <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage" />
+    $!gotoPageFormHTML</div>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    #macro ( genericTree $somelist )
+    #foreach ( $some in $somelist )
+    <option value="$!some.id">#if($!some.level>0)
+        #foreach($count in [0..$!some.level])&nbsp;#end #end $!some.className
+    </option>
+    #genericTree($some.childs)
+    #end
+    #end
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css"  rel="stylesheet" type="text/css"/>
+    <link  href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type=text/css rel=stylesheet>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-1.8.17.custom.css"/>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-timepicker-addon.css"/>
+
+    <script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+    <script src="$!webPath/resources/js/jquery-1.7.1.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.17.custom.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-timepicker-addon.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-timepicker-zh-CN.js"></script>
+    <script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    <script src="$!webPath/resources/js/jquery.validate.min.js"></script>
+    <script src="$!webPath/resources/js/jquery.zh.cn.js"></script>
+    <script>
+        function changeArea(obj, level) {
+            var id = obj.value;
+            if (id != "") {
+                jQuery.post("$!webPath/load_area.htm", {"pid": id}, function (data) {
+                    jQuery("#area" + level).empty();
+                    jQuery("#area" + level).append("<option value=''>请选择</option>");
+                    jQuery.each(data, function (index, item) {
+                        jQuery("#area" + level).append("<option value='" + item.id + "'>" + item.areaName + "</option>");
+                        jQuery("#area" + level).show();
+                    });
+                }, "json");
+            } else {
+                for (var i = level; i <= 8; i++) {
+                    jQuery("#area" + i).empty();
+                    jQuery("#area" + i).hide();
+                }
+            }
+        }
+        ;
+        jQuery(document).ready(function () {
+            jQuery("#theForm").validate({
+                ignore: "",
+                rules: {
+                    userId: {
+                        required: true,
+                        maxlength:5
+                    },
+                    areaId: {
+                        required: true
+                    },
+                    serviceName: {
+                        required: true,
+                        maxlength:10
+                    },
+                    serviceContent: {
+                        required: true,
+                        maxlength:300
+                    },
+                    createTime: {
+                        required: true,
+                        date: true
+                    },
+                    serviceProviderStatus: {
+                        required: true,
+                    },
+                    deleteTime: {
+                        date: true
+                    },
+                    createAccount: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    userId: {required: "用户",maxlength:"输入长度最多是5的字符串(汉字算一个字符)"},
+                    areaId: {required: "小区"},
+                    serviceName: {required: "维修商名称",maxlength:"输入长度最多是10的字符串(汉字算一个字符)"},
+                    serviceContent: {required: "维修内容",maxlength:"输入长度最多是300的字符串(汉字算一个字符)"},
+                    createTime: {required: "创建时间", date: " 必须输入正确格式的日期"},
+                    serviceProviderStatus: {required: "是否删除"},
+                    deleteTime: {date: " 必须输入正确格式的日期"},
+                    createAccount: {required: "创建账户"},
+                }
+            });
+        });
+
+        function saveForm() {
+            jQuery("#theForm").submit();
+        };
+
+        $(function () {
+            $(".ui_timepicker").datetimepicker({
+                //showOn: "button",
+                //buttonImage: "./css/images/icon_calendar.gif",
+                //buttonImageOnly: true,
+                showSecond: true,
+                timeFormat: 'hh:mm:ss',
+                stepHour: 1,
+                stepMinute: 1,
+                stepSecond: 1
+            })
+        });
+
+        $(function () {
+            $("select[name=serviceProviderStatus]").bind("change", function () {
+                if ($(this).val() == "NO") {
+                    alert("选择未删除,删除时间和删除账户可以不填");
+                    $("#deleteAccount").hide();
+                    $("#deleteTime").hide();
+                } else {
+                    $("#deleteAccount").show();
+                    $("#deleteTime").show();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="cont">
+    <h1 class="seth1">新增维修商</h1>
+    <form name="theForm" id="theForm" action="$!webPath/admin/serviceProvider_save.htm" method="post">
+        <input name="id" type="hidden" id="id" value="$!obj.id"/>
+        <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage"/>
+        <div class="setcont">
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>用户</li>
+                <li><span class="webname">
+          <input name="userId" type="text" id="userId" value="$!obj.userId.userName" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>选择区域</li>
+                <select class="areaId" name="area1" id="area1" level="2" onchange="changeArea(this,2)">
+                    <option value="">区域</option>
+                    #foreach($area in $areas)
+                    <option value="$!area.id">$!area.areaName</option>
+                    #end
+                </select>
+                <select class="areaId" name="area2" id="area2" style="display:none;width:100px;" level="3"
+                        onchange="changeArea(this,3)">
+                </select>
+                <select class="areaId" name="area3" id="area3" style="display:none;width:100px;" level="4"
+                        onchange="changeArea(this,4)">
+                </select>
+                <select class="areaId" name="area4" id="area4" style="display:none;width:100px;" level="5"
+                        onchange="changeArea(this,5)">
+                </select>
+                <select class="areaId" name="areaId" id="area5" style="display:none;width:100px;" level="6">
+                </select>
+
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>维修商名称</li>
+                <li><span class="webname">
+          <input name="serviceName" type="text" id="serviceName" value="$!obj.serviceName" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>维修内容</li>
+                <li><span class="webname">
+          <input name="serviceContent" type="text" id="serviceContent" value="$!obj.serviceContent" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>创建时间</li>
+                <li><span class="webname">
+          <input name="createTime" type="text" class="ui_timepicker" id="createTime" value="$!obj.createTime" size="40" readonly="readonly"/>
+        </span></li>
+            </ul>
+
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>是否删除</li>
+                <select name="serviceProviderStatus" id="serviceProviderStatus">
+                    <option value="">请选择是否删除</option>
+                    <option value="YES">是</option>
+                    <option value="NO">否</option>
+                </select>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>删除账户</li>
+                <li><span class="webname">
+          <input name="deleteAccount" type="text" id="deleteAccount" value="$!obj.deleteAccount" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>删除时间</li>
+                <li><span class="webname">
+          <input name="deleteTime" type="text" class="ui_timepicker" id="deleteTime" value="$!obj.deleteTime" size="40" readonly="readonly"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>创建账户</li>
+                <li><span class="webname">
+          <input name="createAccount" type="text" id="createAccount" value="$!obj.createAccount" size="40"/>
+        </span></li>
+            </ul>
+
+        </div>
+    </form>
+    <div class="submit">
+        <input name="save" type="button" value="提交" onclick="saveForm()"/>
+    </div>
+</div>
+</body>
+</html>

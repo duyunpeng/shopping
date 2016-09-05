@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+</head>
+<body>
+<div class="cont">
+    <div class="orderdetail">
+        <div class="orderh">用户</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">用户:</span><span>$!obj.userId.getUsername()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">物业名称</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">物业名称:</span><span>$!obj.informationName.getPropertyName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">消息标题</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">消息标题:</span><span>$!obj.messageHeader</span></li>
+            </ul>
+        </div>
+        <div class="orderh">物业公告内容</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">物业公告内容:</span><span>$!obj.propertyAnnouncementContent</span></li>
+            </ul>
+        </div>
+        <div class="orderh">公告时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">公告时间:</span><span>$!obj.informationTime</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="submit">
+    <input name="go" type="button" value="返回列表"
+           onclick="window.location.href='$!webPath/admin/propertyInformation_list.htm'"/>
+</div>
+</div>
+</body>
+</html>

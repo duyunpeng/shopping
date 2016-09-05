@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+</head>
+<body>
+<div class="cont">
+    <div class="orderdetail">
+        <div class="orderh">物业名称</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">物业名称:</span><span>$!obj.sheetName.getPropertyName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">通知标题</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">通知标题:</span><span>$!obj.noticeTitle</span></li>
+            </ul>
+        </div>
+        <div class="orderh">通知内容</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">通知内容:</span><span>$!obj.noticeContent</span></li>
+            </ul>
+        </div>
+        <div class="orderh">通知时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">通知时间:</span><span>$!obj.noticeTime</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="submit">
+    <input name="go" type="button" value="返回列表" onclick="window.location.href='$!webPath/admin/propertyAnnouncement_list.htm'"/>
+</div>
+</div>
+</body>
+</html>

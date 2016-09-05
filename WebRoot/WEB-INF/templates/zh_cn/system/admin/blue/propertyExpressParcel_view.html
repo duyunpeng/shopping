@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+</head>
+<body>
+<div class="cont">
+    <div class="orderdetail">
+        <div class="orderh">物业名称</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">物业名称:</span><span>$!obj.parcelName.getPropertyName()</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">快递单号</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">快递单号:</span><span>$!obj.courierNumber</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">发货地址</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">发货地址:</span><span>$!obj.shippingAddress</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">发货人</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">发货人:</span><span>$!obj.shippingPerson</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">收货地址</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">收货地址:</span><span>$!obj.receiptAddress</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">收货人</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">收货人:</span><span>$!obj.receiptPerson</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">创建时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">创建时间:</span><span>$!obj.createTime</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">创建人</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">创建人:</span><span>$!obj.createPerson</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">是否删除</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">是否删除:</span><span>$!obj.expressParcelStatus.getName()</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">删除人</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">删除人:</span><span>$!obj.deletePerson</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">删除时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">删除时间:</span><span>$!obj.deleteTime</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">发货人电话</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">发货人电话:</span><span>$!obj.shippingPhoneNumber</span></li>
+            </ul>
+        </div>
+
+        <div class="orderh">收货人电话</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">收货人电话:</span><span>$!obj.receiptPhoneNumber</span></li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<div class="submit">
+    <input name="go" type="button" value="返回列表" onclick="window.location.href='$!webPath/admin/propertyExpressParcel_list.htm'"/>
+</div>
+</div>
+</body>
+</html>

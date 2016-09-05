@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+</head>
+<body>
+<div class="cont">
+    <div class="orderdetail">
+        <div class="orderh">用户</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">用户:</span><span>$!obj.userId.getUsername()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">小区</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">小区:</span><span>$!obj.areaId.getAreaName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">创建时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">创建时间:</span><span>$!CommUtil.formatLongDate($!obj.createTime$)</span></li>
+            </ul>
+        </div>
+        <div class="orderh">最后结算时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">最后结算时间:</span><span>$!CommUtil.formatLongDate($!obj.settlementTime$)</span></li>
+            </ul>
+        </div>
+        <div class="orderh">物业名称</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">物业名称:</span><span>$!obj.propertyName</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="submit">
+    <input name="go" type="button" value="返回列表" onclick="window.location.href='$!webPath/admin/propertySheet_list.htm'"/>
+</div>
+</div>
+</body>
+</html>

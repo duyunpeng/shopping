@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    #macro ( genericTree $somelist )
+    #foreach ( $some in $somelist )
+    <option value="$!some.id">#if($!some.level>0)
+        #foreach($count in [0..$!some.level])&nbsp;#end #end $!some.className</option>
+    #genericTree($some.childs)
+    #end
+    #end
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css"  rel="stylesheet" type="text/css"/>
+    <link  href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type=text/css rel=stylesheet>
+    <script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+    <script src="$!webPath/resources/js/jquery.poshytip.min.js"></script>
+    <script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    <script src="$!webPath/resources/js/jquery.validate.min.js"></script>
+    <script src="$!webPath/resources/js/jquery.zh.cn.js"></script>
+    <script>
+        function changeArea(obj, level) {
+            var id = obj.value;
+            if (id != "") {
+                jQuery.post("$!webPath/load_area.htm", {"pid": id}, function (data) {
+                    jQuery("#area" + level).empty();
+                    jQuery("#area" + level).append("<option value=''>请选择</option>");
+                    jQuery.each(data, function (index, item) {
+                        jQuery("#area" + level).append("<option value='" + item.id + "'>" + item.areaName + "</option>");
+                        jQuery("#area" + level).show();
+                    });
+                }, "json");
+            } else {
+                for (var i = level; i <= 8; i++) {
+                    jQuery("#area" + i).empty();
+                    jQuery("#area" + i).hide();
+                }
+            }
+        }
+        ;
+        jQuery(document).ready(function(){
+            jQuery("#theForm").validate({
+                ignore: "",
+                rules:{
+                    user:{
+                        required :true
+                    },
+                    area: {
+                        required: true
+                    },
+                    houseArea: {
+                        required: true,
+                        number: true
+                    }
+                },
+                messages:{
+                    user: {required: "业主名称不能为空"},
+                    area: {required: "请继续选择区域"},
+                    houseArea:{required:"请填写房屋面积"}
+                }
+            });
+        });
+
+        function saveForm(){
+            jQuery("#theForm").submit();
+        }
+    </script>
+</head>
+<body>
+<div class="cont">
+    <h1 class="seth1">编辑邮件</h1>
+    <form name="theForm" id="theForm" action="$!webPath/admin/tenement_save.htm" method="post">
+        <input name="id" type="hidden" id="id" value="$!obj.id" />
+        <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage" />
+        <div class="setcont">
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>业主名称</li>
+                <li><span class="webname">
+          <input name="user" type="text" id="user" value="$!obj.user.userName" size="40" />
+        </span></li>
+            </ul>
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>包裹类型</li>
+                <select name="fileType" id="fileType">
+                    <option value="FILE">文件</option>
+                    <option value="EXPRESS_DELIVERY">快件</option>
+                </select>
+            </ul>
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>代收状态</li>
+                <select name="collectionStatus" id="collectionStatus">
+                    <option value="YES">已代收</option>
+                    <option value="NO">没有代收</option>
+                </select>
+            </ul>
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>签收状态</li>
+                <select name="signStatus" id="signStatus">
+                    <option value="YES">业主已签收</option>
+                    <option value="NO">业主未签收</option>
+                </select>
+            </ul>
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>邮费类型</li>
+                <select name="postageStatus" id="postageStatus">
+                    <option value="FREE_SHIPPING">免邮</option>
+                    <option value="PROPERTY_TO_PAY">物业代付</option>
+                </select>
+            </ul>
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>选择区域</li>
+                <select class="areaId" name="area1" id="area1" level="2" onchange="changeArea(this,2)">
+                    <option value="">区域</option>
+                    #foreach($area in $areas)
+                    <option value="$!area.id">$!area.areaName</option>
+                    #end
+                </select>
+                <select class="areaId" name="area2" id="area2" style="display:none;width:100px;" level="3"
+                        onchange="changeArea(this,3)">
+                </select>
+                <select class="areaId" name="area3" id="area3" style="display:none;width:100px;" level="4"
+                        onchange="changeArea(this,4)">
+                </select>
+                <select class="areaId" name="area4" id="area4" style="display:none;width:100px;" level="5"
+                        onchange="changeArea(this,5)">
+                </select>
+                <select class="areaId" name="area5" id="area5" style="display:none;width:100px;" level="6"
+                        onchange="changeArea(this,6)">
+                </select>
+                <select class="areaId" name="area6" id="area6" style="display:none;width:100px;" level="7"
+                        onchange="changeArea(this,7)">
+                </select>
+                <select class="areaId" name="area" id="area7" style="display:none;width:100px;" level="8">
+                </select>
+            </ul>
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>房屋面积</li>
+                <li><span class="webname">
+          <input name="houseArea" type="text" id="houseArea" value="$!obj.houseArea" size="40"/>平方米
+        </span></li>
+            </ul>
+        </div>
+    </form>
+    <div class="submit">
+        <input name="save" type="button" value="提交" onclick="saveForm()" />
+    </div>
+</div>
+</body>
+</html>

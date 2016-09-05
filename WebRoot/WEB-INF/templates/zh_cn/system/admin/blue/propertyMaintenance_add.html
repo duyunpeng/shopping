@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    #macro ( genericTree $somelist )
+    #foreach ( $some in $somelist )
+    <option value="$!some.id">#if($!some.level>0)
+        #foreach($count in [0..$!some.level])&nbsp;#end #end $!some.className
+    </option>
+    #genericTree($some.childs)
+    #end
+    #end
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css"  rel="stylesheet" type="text/css"/>
+    <link  href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type=text/css rel=stylesheet>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-1.8.17.custom.css"/>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-timepicker-addon.css"/>
+
+    <script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+    <script src="$!webPath/resources/js/jquery-1.7.1.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.17.custom.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-timepicker-addon.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-timepicker-zh-CN.js"></script>
+    <script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    <script src="$!webPath/resources/js/jquery.validate.min.js"></script>
+    <script src="$!webPath/resources/js/jquery.zh.cn.js"></script>
+    <script>
+        function changeArea(obj, level) {
+            var id = obj.value;
+            if (id != "") {
+                jQuery.post("$!webPath/load_area.htm", {"pid": id}, function (data) {
+                    jQuery("#area" + level).empty();
+                    jQuery("#area" + level).append("<option value=''>请选择</option>");
+                    jQuery.each(data, function (index, item) {
+                        jQuery("#area" + level).append("<option value='" + item.id + "'>" + item.areaName + "</option>");
+                        jQuery("#area" + level).show();
+                    });
+                }, "json");
+            } else {
+                for (var i = level; i <= 8; i++) {
+                    jQuery("#area" + i).empty();
+                    jQuery("#area" + i).hide();
+                }
+            }
+        }
+        ;
+        jQuery(document).ready(function () {
+            jQuery("#theForm").validate({
+                ignore: "",
+                rules: {
+                    userId: {
+                        required: true,
+                        maxlength:5
+                    },
+                    repairStatus: {
+                        required: true
+                    },
+                    title: {
+                        required: true,
+                        maxlength:10
+                    },
+                    createTime: {
+                        required: true,
+                        date:true
+                    },
+                    dealTime: {
+                        date:true
+                    },
+                    dealStatus: {
+                        required: true
+                    },
+                    maintenanceStatus: {
+                        required: true
+                    },
+                    createAccount: {
+                        required: true
+                    },
+                    deleteTime: {
+                        date:true
+                    }
+                },
+                messages: {
+                    userId: {required: "用户",maxlength:" 输入长度最多是5的字符串(汉字算一个字符)"},
+                    repairStatus: {required: "维修类别"},
+                    title: {required: "标题",maxlength:"输入长度最多是10的字符串(汉字算一个字符)"},
+                    createTime: {required: "创建时间",date:"必须输入正确格式的日期"},
+                    dealTime: {date: "必须输入正确格式的日期"},
+                    dealStatus: {required: "处理状态"},
+                    maintenanceStatus: {required: "是否删除"},
+                    createAccount: {required: "创建账户"},
+                    deleteTime: {date:"必须输入正确格式的日期"},
+                }
+            });
+        });
+
+        function saveForm() {
+            jQuery("#theForm").submit();
+        };
+
+        $(function () {
+            $(".ui_timepicker").datetimepicker({
+                //showOn: "button",
+                //buttonImage: "./css/images/icon_calendar.gif",
+                //buttonImageOnly: true,
+                showSecond: true,
+                timeFormat: 'hh:mm:ss',
+                stepHour: 1,
+                stepMinute: 1,
+                stepSecond: 1
+            })
+        });
+
+        $(function(){
+            $("select[name=maintenanceStatus]").bind("change",function(){
+                if($(this).val()=="NO"){
+                    alert("选择不删除,删除时间和删除账户可以不填");
+                    $("#deleteTime").hide();
+                    $("#deleteAccount").hide();
+                }else{
+                    $("#deleteTime").show();
+                    $("#deleteAccount").show();
+                }
+            });
+        });
+
+        $(function () {
+            $("select[name=dealStatus]").bind("change", function () {
+                if ($(this).val() == "NO") {
+                    alert("选择未处理,处理时间可以不填");
+                    $("#dealTime").hide();
+                } else {
+                    $("#dealTime").show();
+                }
+            });
+        });
+
+    </script>
+</head>
+<body>
+<div class="cont">
+    <h1 class="seth1">新增物业维修</h1>
+    <form name="theForm" id="theForm" action="$!webPath/admin/propertyMaintenance_new.htm" method="post">
+        <input name="id" type="hidden" id="id" value="$!obj.id"/>
+        <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage"/>
+        <div class="setcont">
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>用户</li>
+                <li><span class="webname">
+          <input name="userId" type="text" id="userId" value="$!obj.userId" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>维修类别</li>
+                <select name="repairStatus" id="repairStatus">
+                    <option value="">请选择维修类别</option>
+                    <option value="PUBLIC_AREA_MAINTENANCE">公共部位维修</option>
+                    <option value="SHARED_FACILITIES_EQUIPMENT">共用设施设备</option>
+                    <option value="PERSONAL_SITE_MAINTENANCE">自用部位维修</option>
+                </select>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>标题</li>
+                <li><span class="webname">
+          <input name="title" type="text" id="title" value="$!obj.title" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>创建时间</li>
+                <li><span class="webname">
+          <input name="createTime" type="text" class="ui_timepicker" id="createTime" value="$!obj.createTime" size="40" readonly="readonly"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>处理状态</li>
+                <select name="dealStatus" id="dealStatus">
+                    <option value="">请选择处理状态</option>
+                    <option value="YES">已处理</option>
+                    <option value="NO">未处理</option>
+                </select>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>处理时间</li>
+                <li><span class="webname">
+          <input name="dealTime" type="text" class="ui_timepicker" id="dealTime" value="$!obj.dealTime" size="40" readonly="readonly"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>是否删除</li>
+                <select name="maintenanceStatus" id="maintenanceStatus">
+                    <option value="">请选择是否删除</option>
+                    <option value="YES">是</option>
+                    <option value="NO">否</option>
+                </select>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>创建账户</li>
+                <li><span class="webname">
+          <input name="createAccount" type="text" id="createAccount" value="$!obj.createAccount" size="40"/>
+        </span></li>
+            </ul>
+
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>删除账户</li>
+                <li><span class="webname">
+          <input name="deleteAccount" type="text" id="deleteAccount" value="$!obj.deleteAccount" size="40"/>
+        </span></li>
+            </ul>
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>删除时间</li>
+                <li><span class="webname">
+          <input name="deleteTime" type="text" class="ui_timepicker" id="deleteTime" value="$!obj.deleteTime" size="40" readonly="readonly"/>
+        </span></li>
+            </ul>
+
+        </div>
+    </form>
+    <div class="submit">
+        <input name="save" type="button" value="提交" onclick="saveForm()"/>
+    </div>
+</div>
+</body>
+</html>

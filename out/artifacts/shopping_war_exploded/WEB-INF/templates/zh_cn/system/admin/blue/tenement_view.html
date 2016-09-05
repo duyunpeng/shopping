@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+</head>
+<body>
+<div class="cont">
+    <div class="orderdetail">
+        <div class="orderh">业主名称</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">业主名称:</span><span>$!obj.user.userName</span></li>
+            </ul>
+        </div>
+        <div class="orderh">包裹类型</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">包裹类型:</span><span>$!obj.fileType.getName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">代收状态</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">代收状态:</span><span>$!obj.collectionStatus.getName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">签收状态</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">签收状态:</span><span>$!obj.signStatus.getName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">邮费类型</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">邮费类型:</span><span>$!obj.postageStatus.getName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">所属区域</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">所属区域:</span><span>$!obj.area.areaName</span></li>
+            </ul>
+        </div>
+        <div class="orderh">房屋面积</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">房屋面积:</span><span>$!obj.houseArea平方米</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="submit">
+    <input name="go" type="button" value="返回列表" onclick="window.location.href='$!webPath/admin/tenement_list.htm'"/>
+</div>
+</div>
+</body>
+</html>

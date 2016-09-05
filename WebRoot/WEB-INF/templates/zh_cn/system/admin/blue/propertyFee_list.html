@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type=text/css rel=stylesheet>
+    <script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+    <script src="$!webPath/resources/js/jquery.validate.min.js"></script>
+    <script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    <script src="$!webPath/resources/js/jquery.poshytip.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+    <script src="$!webPath/resources/js/jquery.zh.cn.js"></script>
+    <script>
+        jQuery(document).ready(function () {
+            jQuery('#beginTime').datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true
+            });
+            jQuery('#endTime').datepicker({
+                dateFormat: "yy-mm-dd",
+                changeMonth: true,
+                changeYear: true
+            });
+            //
+        });
+    </script>
+</head>
+<body>
+
+<div class="cont">
+    <h1 class="seth1">物业管理</h1>
+    <div class="settab"><span class="tab-one"></span> <span class="tabs"> <a
+            href="$!webPath/admin/propertyFee_add.htm?id=$!obj.id" class="this">新增物业费</a></span>
+        <span class="tab-two"></span></div>
+    <form action="$!webPath/admin/propertyFee_list.htm" method="post" id="queryForm">
+        <div class="orders">
+            <ul>
+                <li><span>用户</span>
+                    <input name="userId" type="text" id="userId"/>
+                    <span>缴费状态</span>
+                    <span class="ordersel"><select name="payStatus" id="payStatus">
+                        <option value="">全部</option>
+                        <option value="YES">已缴费</option>
+                        <option value="NO">未缴费</option>
+                    </select></span>
+                    <span>是否确认</span>
+                    <span class="ordersel"><select name="confirmStatus" id="confirmStatus">
+                        <option value="">全部</option>
+                        <option value="YES">已确认</option>
+                        <option value="NO">未确认</option>
+                    </select></span>
+                    <input name="" type="submit" value="搜索" style="cursor:pointer;"/>
+                    </span></li>
+            </ul>
+        </div>
+    </form>
+    <form action="$!webPath/admin/propertyFee_export_excel.htm" method="post" id="queryForm1">
+        <div class="orders">
+            <ul>
+                <li><span>用户</span>
+                    <input name="userId" type="text" id="userId1"/>
+                    <span>缴费状态</span>
+                    <span class="ordersel"><select name="payStatus" id="payStatus1">
+                        <option value="">全部</option>
+                        <option value="YES">已缴费</option>
+                        <option value="NO">未缴费</option>
+                    </select></span>
+                    <span>是否确认</span>
+                    <span class="ordersel"><select name="confirmStatus" id="confirmStatus1">
+                        <option value="">全部</option>
+                        <option value="YES">已确认</option>
+                        <option value="NO">未确认</option>
+                    </select></span>
+                    <input name="" type="submit" value="导出表格" style="cursor:pointer;"/>
+                    </span></li>
+            </ul>
+        </div>
+    </form>
+    <form action="$!webPath/admin/propertyFee_list.htm" method="post" id="ListForm">
+        <div class="allshop_table">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr style="background: #if($!config.websiteCss=='blue') #2A7AD2 #end
+      #if($!config.websiteCss=='black')#333 #end; height:30px; color:#FFF">
+                    <td width="5%"></td>
+                    <td width="7%">用户</td>
+                    <td width="7%">缴费状态</td>
+                    <td width="8%">创建时间</td>
+                    <td width="7%">创建账户</td>
+                    <td width="7%">创建人</td>
+                    <td width="7%">总费用</td>
+                    <td width="7%">已交费用</td>
+                    <td width="7%">是否确认</td>
+                    <td align="center">操作</td>
+                </tr>
+                #foreach($obj in $objs)
+                <tr>
+                    <td align="left"><input name="id" type="checkbox" id="id" style="width:16px; border:none;"
+                                            value="$!obj.id"/></td>
+                    <td>$!obj.userId.getUsername()</td>
+                    <td>$!obj.payStatus.getName()</td>
+                    <td>$!CommUtil.formatLongDate($!obj.createTime$)</td>
+                    <td>$!obj.account</td>
+                    <td>$!obj.createPerson</td>
+                    <td>$!obj.totalCost</td>
+                    <td>$!obj.paidFee</td>
+                    <td>$!obj.confirmStatus.getName()</td>
+                    <td align="center" class="blue xiahua"><a href="$!webPath/admin/propertyFee_view.htm?id=$!obj.id">查看</a>
+                        <a href="$!webPath/admin/propertyFee_edit.htm?id=$!obj.id">编辑</a>
+                        <a href="$!webPath/admin/propertyFee_delete.htm?mulitId=$!obj.id">删除</a>
+                    </td>
+                </tr>
+                #end
+                <tr>
+                    <td align="left"><input type="checkbox" name="all" id="all" value="" onclick="selectAll(this)"/>
+                        <input name="mulitId" type="hidden" id="mulitId"/></td>
+                    <td colspan="2" class="bdel">
+                        <span class="sp1">全部</span><span class="sp2">
+          <div class="shop_btn_del shopbtn">
+              <input name="" type="button" value="删除" onclick="cmd('$!webPath/admin/propertyFee_delete.htm');"
+                     style="cursor:pointer;"/>
+          </div>
+          </span></td>
+                </tr>
+            </table>
+        </div>
+        <div class="fenye">
+            <input name="end_price" type="hidden" id="end_price" value="$!end_price"/>
+            <input name="begin_price" type="hidden" id="begin_price" value="$!begin_price"/>
+            <input name="endTime" type="hidden" id="endTime" value="$!endTime"/>
+            <input name="beginTime" type="hidden" id="beginTime" value="$!beginTime"/>
+            <input name="type_data" type="hidden" id="type_data" value="$!type_data"/>
+            <input name="type" type="hidden" id="type" value="$!type"/>
+            <input name="order_status" type="hidden" id="order_status" value="$!order_status"/>
+            <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage"/>
+            $!gotoPageFormHTML
+        </div>
+    </form>
+</div>
+</body>
+</html>

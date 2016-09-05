@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    #macro ( genericTree $somelist )
+    #foreach ( $some in $somelist )
+    <option value="$!some.id">#if($!some.level>0)
+        #foreach($count in [0..$!some.level])&nbsp;#end #end $!some.className
+    </option>
+    #genericTree($some.childs)
+    #end
+    #end
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css"  rel="stylesheet" type="text/css"/>
+    <link  href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type=text/css rel=stylesheet>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-1.8.17.custom.css"/>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-timepicker-addon.css"/>
+
+    <script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+    <script src="$!webPath/resources/js/jquery-1.7.1.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.17.custom.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-timepicker-addon.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-timepicker-zh-CN.js"></script>
+    <script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    <script src="$!webPath/resources/js/jquery.validate.min.js"></script>
+    <script src="$!webPath/resources/js/jquery.zh.cn.js"></script>
+    <script>
+        function changeArea(obj, level) {
+            var id = obj.value;
+            if (id != "") {
+                jQuery.post("$!webPath/load_area.htm", {"pid": id}, function (data) {
+                    jQuery("#area" + level).empty();
+                    jQuery("#area" + level).append("<option value=''>请选择</option>");
+                    jQuery.each(data, function (index, item) {
+                        jQuery("#area" + level).append("<option value='" + item.id + "'>" + item.areaName + "</option>");
+                        jQuery("#area" + level).show();
+                    });
+                }, "json");
+            } else {
+                for (var i = level; i <= 8; i++) {
+                    jQuery("#area" + i).empty();
+                    jQuery("#area" + i).hide();
+                }
+            }
+        }
+        ;
+        jQuery(document).ready(function () {
+            jQuery("#theForm").validate({
+                ignore: "",
+                rules: {
+                    userId: {
+                        required: true,
+                        maxlength:5
+                    },
+                    informationName: {
+                        required: true,
+                        maxlength:10
+                    },
+                    messageHeader: {
+                        required: true,
+                        maxlength:10
+                    },
+                    propertyAnnouncementContent: {
+                        required: true
+                    },
+                    informationTime: {
+                        required: true,
+                        date:true
+                    }
+                },
+                messages: {
+                    userId: {required: "用户",maxlength:"输入长度最多是5的字符串"},
+                    informationName: {required: "物业名称",maxlength:"输入长度最多是10的字符串"},
+                    messageHeader: {required: "消息标题",maxlength:"输入长度最多是10的字符串"},
+                    propertyAnnouncementContent: {required: "物业公告内容"},
+                    informationTime: {required: "公告时间",date:"必须输入正确格式的日期"},
+                }
+            });
+        });
+
+        function saveForm() {
+            jQuery("#theForm").submit();
+        };
+
+        $(function () {
+            $(".ui_timepicker").datetimepicker({
+                //showOn: "button",
+                //buttonImage: "./css/images/icon_calendar.gif",
+                //buttonImageOnly: true,
+                showSecond: true,
+                timeFormat: 'hh:mm:ss',
+                stepHour: 1,
+                stepMinute: 1,
+                stepSecond: 1
+            })
+        });
+    </script>
+</head>
+<body>
+<div class="cont">
+    <h1 class="seth1">新增物业消息</h1>
+    <form name="theForm" id="theForm" action="$!webPath/admin/propertyInformation_save.htm" method="post">
+        <input name="id" type="hidden" id="id" value="$!obj.id"/>
+        <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage"/>
+        <div class="setcont">
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>用户</li>
+                <li><span class="webname">
+          <input name="userId" type="text" id="userId" value="$!obj.userId.getUsername()" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>物业名称</li>
+                <li><span class="webname">
+          <input name="informationName" type="text" id="informationName" value="$!obj.informationName.getPropertyName" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>消息标题</li>
+                <li><span class="webname">
+          <input name="messageHeader" type="text" id="messageHeader" value="$!obj.messageHeader" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>物业公告内容</li>
+                <li><span class="webname">
+          <input name="propertyAnnouncementContent" type="text" id="propertyAnnouncementContent" value="$!obj.propertyAnnouncementContent" size="40"/>
+        </span></li>
+            </ul>
+
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>公告时间</li>
+                <li><span class="webname">
+          <input name="informationTime" type="text" class="ui_timepicker" id="informationTime" value="$!obj.informationTime" size="40" readonly="readonly"/>
+        </span></li>
+            </ul>
+
+        </div>
+    </form>
+    <div class="submit">
+        <input name="save" type="button" value="提交" onclick="saveForm()"/>
+    </div>
+</div>
+</body>
+</html>

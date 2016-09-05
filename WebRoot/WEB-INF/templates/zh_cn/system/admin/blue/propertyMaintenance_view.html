@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+</head>
+<body>
+<div class="cont">
+    <div class="orderdetail">
+        <div class="orderh">用户</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">用户:</span><span>$!obj.userId.getUsername()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">维修类别</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">维修类别:</span><span>$!obj.repairStatus.getName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">标题</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">标题:</span><span>$!obj.title</span></li>
+            </ul>
+        </div>
+        <div class="orderh">创建时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">创建时间:</span><span>$!obj.createTime</span></li>
+            </ul>
+        </div>
+        <div class="orderh">处理时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">处理时间:</span><span>$!obj.dealTime</span></li>
+            </ul>
+        </div>
+        <div class="orderh">处理状态</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">处理状态:</span><span>$!obj.dealStatus.getName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">是否删除</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">是否删除:</span><span>$!obj.maintenanceStatus.getName()</span></li>
+            </ul>
+        </div>
+        <div class="orderh">创建账户</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">创建账户:</span><span>$!obj.createAccount</span></li>
+            </ul>
+        </div>
+        <div class="orderh">删除账户</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">删除账户:</span><span>$!obj.deleteAccount</span></li>
+            </ul>
+        </div>
+        <div class="orderh">删除时间</div>
+        <div class="orderul">
+            <ul>
+                <li><span class="ordertitle">删除时间:</span><span>$!obj.deleteTime</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="submit">
+    <input name="go" type="button" value="返回列表"
+           onclick="window.location.href='$!webPath/admin/propertyMaintenance_list.htm'"/>
+</div>
+</div>
+</body>
+</html>

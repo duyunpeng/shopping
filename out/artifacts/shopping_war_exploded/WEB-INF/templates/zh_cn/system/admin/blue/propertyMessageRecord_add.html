@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    #macro ( genericTree $somelist )
+    #foreach ( $some in $somelist )
+    <option value="$!some.id">#if($!some.level>0)
+        #foreach($count in [0..$!some.level])&nbsp;#end #end $!some.className
+    </option>
+    #genericTree($some.childs)
+    #end
+    #end
+    <link href="$!webPath/resources/style/system/manage/$!{config.websiteCss}/template.css" rel="stylesheet"
+          type="text/css"/>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-1.8.22.custom.css" type=text/css rel=stylesheet>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-1.8.17.custom.css"/>
+    <link href="$!webPath/resources/style/common/css/jquery-ui-timepicker-addon.css"/>
+
+    <script src="$!webPath/resources/js/jquery-1.6.2.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.21.js"></script>
+    <script src="$!webPath/resources/js/jquery-1.7.1.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-1.8.17.custom.min.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-timepicker-addon.js"></script>
+    <script src="$!webPath/resources/js/jquery-ui-timepicker-zh-CN.js"></script>
+    <script src="$!webPath/resources/js/jquery.shop.common.js"></script>
+    <script src="$!webPath/resources/js/jquery.validate.min.js"></script>
+    <script src="$!webPath/resources/js/jquery.zh.cn.js"></script>
+    <script>
+        function changeArea(obj, level) {
+            var id = obj.value;
+            if (id != "") {
+                jQuery.post("$!webPath/load_area.htm", {"pid": id}, function (data) {
+                    jQuery("#area" + level).empty();
+                    jQuery("#area" + level).append("<option value=''>请选择</option>");
+                    jQuery.each(data, function (index, item) {
+                        jQuery("#area" + level).append("<option value='" + item.id + "'>" + item.areaName + "</option>");
+                        jQuery("#area" + level).show();
+                    });
+                }, "json");
+            } else {
+                for (var i = level; i <= 8; i++) {
+                    jQuery("#area" + i).empty();
+                    jQuery("#area" + i).hide();
+                }
+            }
+        }
+        ;
+        jQuery(document).ready(function () {
+            jQuery("#theForm").validate({
+                ignore: "",
+                rules: {
+                    account: {
+                        required: true,
+                        maxlength:11,
+                        minlength:11
+                    },
+                    sendTime: {
+                        required: true,
+                        date:true
+                    }
+                },
+                messages: {
+                    account: {required: "接受用户",maxlength:"输入长度最多是11的字符串(汉字算一个字符)"},
+                    sendTime: {required: "发送时间",date:" 必须输入正确格式的日期"},
+
+                }
+            });
+        });
+
+        function saveForm() {
+          var phone = jQuery("#phone").val();
+            if(phone != ""){
+                jQuery.ajax({
+                    url:"$!webPath/admin/propertyMessage_findPhone.htm?phone="+phone+"&n="+Math.random(),
+                    success:function(date){
+                            var o = eval(date);
+                        if(o==true){
+                            var span = document.getElementById("span");
+                            span.innerHTML="";
+                            jQuery("#theForm").submit();
+                        }
+                        if(o==false){
+                           var span = document.getElementById("span");
+                            span.innerHTML="";
+                            span.innerHTML="该用户不存在";
+                        }
+                    }
+                });
+            }else{
+                var span = document.getElementById("span");
+                span.innerHTML="请填写11位电话号码";
+            }
+        };
+
+        $(function () {
+            $(".ui_timepicker").datetimepicker({
+                //showOn: "button",
+                //buttonImage: "./css/images/icon_calendar.gif",
+                //buttonImageOnly: true,
+                showSecond: true,
+                timeFormat: 'hh:mm:ss',
+                stepHour: 1,
+                stepMinute: 1,
+                stepSecond: 1
+            })
+        });
+    </script>
+</head>
+<body>
+<div class="cont">
+    <h1 class="seth1">短信发送</h1>
+    <form name="theForm" id="theForm" action="$!webPath/admin/propertyMessageRecord_new.htm" method="post">
+        <input name="id" type="hidden" id="id" value="$!obj.id"/>
+        <input name="currentPage" type="hidden" id="currentPage" value="$!currentPage"/>
+        <div class="setcont">
+            <!--鼠标经过样式-->
+            <ul class="set1">
+                <li><strong class="orange fontsize20">*</strong>接受用户</li>
+                <li><span class="webname">
+          <input name="phone" type="text" id="phone"  size="40"/>
+        </span>
+                    <span id="span" style="color: red"></span></li>
+            </ul>
+
+        </div>
+    </form>
+    <div class="submit">
+        <input name="save" type="button" value="提交" onclick="saveForm()"/>
+    </div>
+</div>
+</body>
+</html>
